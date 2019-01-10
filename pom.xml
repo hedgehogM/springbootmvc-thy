@@ -1,0 +1,141 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>hlm</groupId>
+  <artifactId>springbootmvc</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  
+  <!-- 在此声明使用 spring boot （添加这个工程就变成了spring boot 应用） -->
+  <parent>
+    <groupId>org.springframework.boot</groupId>
+  	<artifactId>spring-boot-starter-parent</artifactId>
+	<version>2.0.0.RELEASE</version>
+  </parent>
+  
+  <!-- 所有依赖 -->
+  <dependencies>
+  
+    <!-- 使应用变为web 应用 ，spring 有自己的MVC框架，那自然就是springMvc了-->
+    <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-web -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
+      <version>2.0.0.RELEASE</version><!--$NO-MVN-MAN-VER$-->
+	</dependency>
+	
+	<!-- 添加thymeleaf依赖，用于完成spring的动态跳转也页面和动态后台传值 -->
+	<dependency>
+	    <groupId>org.springframework.boot</groupId>
+	    <artifactId>spring-boot-starter-thymeleaf</artifactId>
+	</dependency>
+	
+	<!-- Springboot中的热部署依赖 -->
+	<dependency>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-devtools</artifactId>
+		<!-- optional=true, 依赖不会传递, 该项目依赖devtools; 之后依赖boot项目的项目如果想要使用devtools, 需要重新引入 -->
+		<optional>true</optional>
+	</dependency>
+
+	
+	<!-- servlet依赖的jar包start -->
+    <dependency>
+        <groupId>javax.servlet</groupId>
+        <artifactId>javax.servlet-api</artifactId>
+    </dependency>
+    <!-- servlet依赖的jar包start -->
+    <!-- jsp依赖jar包start -->
+    <dependency>
+        <groupId>javax.servlet.jsp</groupId>
+        <artifactId>javax.servlet.jsp-api</artifactId>
+        <version>2.3.1</version>
+    </dependency>
+    <!-- jsp依赖jar包end -->
+    <!--jstl标签依赖的jar包start -->
+    <dependency>
+        <groupId>javax.servlet</groupId>
+        <artifactId>jstl</artifactId>
+    </dependency>
+    <!--jstl标签依赖的jar包end -->
+    
+    
+    <!-- MySQL -->
+	<dependency>
+		<groupId>mysql</groupId>
+		<artifactId>mysql-connector-java</artifactId>
+	</dependency>
+	<!-- mybatis -->
+	<dependency>
+		<groupId>org.mybatis</groupId>
+		<artifactId>mybatis-spring</artifactId>
+		<version>1.3.0</version>
+	</dependency>
+	<dependency>
+		<groupId>org.mybatis</groupId>
+		<artifactId>mybatis</artifactId>
+		<version>3.2.5</version>
+	</dependency>
+	<!-- dbcp连接池 -->
+	<dependency>
+		<groupId>commons-dbcp</groupId>
+		<artifactId>commons-dbcp</artifactId>
+		<version>1.4</version>
+	</dependency>
+	<!-- spring核心 -->
+	<!-- 为JDBC、Hibernate、JDO、JPA等提供的一致的声明式和编程式事务管理 -->
+	<dependency>
+		<groupId>org.springframework</groupId>
+		<artifactId>spring-tx</artifactId>
+	</dependency>
+	<!-- 对JDBC 的简单封装 -->
+	<dependency>
+		<groupId>org.springframework</groupId>
+		<artifactId>spring-jdbc</artifactId>
+	</dependency>
+	<!-- Spring提供的对AspectJ框架的整合，aspectJ：面向切面的框架 -->
+	<dependency>
+		<groupId>org.springframework</groupId>
+		<artifactId>spring-aspects</artifactId>
+	</dependency>
+	
+  </dependencies>
+  
+  <!-- 全局配置（project build） 针对整个项目的所有情况都有效 -->
+  <build>
+  		<!--  build目标文件的名称，默认情况为${artifactId（项目名）}-${version（版本）} -->
+		<finalName>springbootmvc-thy</finalName>
+		<!-- 用于指定使用的插件 -->
+		<plugins>
+			<!-- maven是个项目管理工具，如果我们不告诉它我们的代码要使用什么样的jdk版本编译的话，
+			它就会用maven-compiler-plugin默认的jdk版本来进行处理，这样就容易出现版本不匹配，
+			以至于可能导致编译不通过的问题。maven的默认编译使用的jdk版本貌似很低，
+			使用maven-compiler-plugin插件可以指定项目源码的jdk版本，编译后的jdk版本，以及编码  -->
+			<!-- 引入java编译器插件 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+					<compilerVersion>1.8</compilerVersion>
+					<encoding>UTF-8</encoding>
+				</configuration>
+			</plugin>
+			<!-- 资源文件拷贝插件 -->
+			<!-- 构建Maven项目的时候，如果没有进行特殊的配置，Maven会按照标准的目录结构查找和处理各种类型文件。
+			1）src/main/java和src/test/java目录下的所有*.java文件分别在comile和test-comiple阶段被编译，编译结果分别放到了target/classes和targe/test-classes目录中，但是这两个目录中的其他文件都会被忽略掉。
+			2）src/main/resouces和src/test/resources这两个目录中的文件也会分别被复制到target/classes和target/test-classes目录中。
+			但是会出现如下情况
+			1）放在src/main/java下的xml文件，比如mybatis中的mapper.xml，是不会被默认加载的。
+			2）想要排除默认加载的某些文件，比如我不想加载init.json文件
+			这个时候就要用到<resource/>标签和maven-resources-plugin插件了，用法如下 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<configuration>
+					<encoding>UTF-8</encoding>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+  
+</project>
